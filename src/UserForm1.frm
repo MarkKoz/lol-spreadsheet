@@ -15,7 +15,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Const allowedChars As String = "1234567890"
 Const allowedCharsNeg As String = "-1234567890"
-Const allowedCharsDec As String = ".1234567890"
+Const allowedCharsK As String = ".kK1234567890"
 
 Dim Roles(1 To 5) As String
 Dim Champions(1 To 132) As String
@@ -586,6 +586,25 @@ Public Sub btn_Submit_Click()
     
     'Checks for empty or invalid fields
     If chk_Error_All.Value = False Then
+        'Gold K abbreviation
+        Dim strDecK As String
+        Dim strGold As String
+        strGold = txt_Gold.Text
+        If InStr(Len(strGold), strGold, "k", vbTextCompare) = 0 Then
+            If InStr(1, strGold, ".", vbTextCompare) <> 0 Then
+                txt_Gold.BackColor = RGB(255, 199, 206)
+                txt_Gold.BorderColor = RGB(156, 0, 6)
+                txt_Gold.ForeColor = RGB(156, 0, 6)
+                bErr = True
+            End If
+        Else
+            strGold = Mid(strGold, 1, Len(strGold) - 1)
+            txt_Gold.Value = CDbl(strGold) * 1000
+            If txt_Gold.Value < 1 Then
+                bErr = True
+            Else
+        End If
+        
         For Each cntrl In Me.Controls
             If TypeName(cntrl) = "ComboBox" Then
                 Select Case cntrl.Name
@@ -668,9 +687,9 @@ NextIteration:
     'Column B - Date
     Dim currentDate As String
     If chk_Date.Value = True Then
-    currentDate = txt_Date.Value
+        currentDate = txt_Date.Value
     Else
-    currentDate = Date
+        currentDate = Date
     End If
       
     ws.Cells(iRow, 2).Value = currentDate
@@ -708,15 +727,20 @@ NextIteration:
     ws.Cells(iRow, 6).Value = txt_LP.Value
 
     'Column G - Final LP
-    Dim baseLP As Integer
+    Dim baseLP As Variant
     Dim finalLP As Integer
     
     If currentNum = 1 Then
         If chk_Dodge.Value = False Then
-            MsgBox "Since this is the first match being entered, select the 'Dodged' checkbox and enter the amount of LP you currently have after this match.", vbOKOnly, "Error Calculating LP"
+            baseLP = Application.InputBox(prompt:="Since this is the first match being entered, enter the amount of LP you currently have after this match.", Title:="Error Calculating LP", Type:=1)
+            If baseLP = False Then
+                Exit Sub
+            Else
+                finalLP = baseLP
+            End If
         Else
             baseLP = CInt(txt_LP_Base.Text)
-            finalLP = baseLP + txt_LP.Value
+            finalLP = baseLP
         End If
     Else
         If chk_Dodge.Value = True Then
@@ -763,7 +787,7 @@ NextIteration:
     ws.Cells(iRow, 16).Value = txt_Screenshot.Value
 
     'Column Q - Grade
-    ws.Cells(iRow, 17).Value = txt_Grade.Value
+    ws.Cells(iRow, 17).Value = UCase(txt_Grade.Text)
 
     'Column R - Role
     ws.Cells(iRow, 18).Value = cmb_Role.Value
@@ -783,7 +807,11 @@ NextIteration:
     'Column W - Other Comments
     ws.Cells(iRow, 23).Value = txt_Other.Value
     
-    txt_Screenshot.SetFocus
+    If txt_Screenshot.Enabled = True Then
+        txt_Screenshot.SetFocus
+    Else
+        txt_Length_M.SetFocus
+    End If
     
     If chk_Submit_Clear.Value = True Then
         btn_Clear_Click
@@ -822,6 +850,27 @@ Public Sub txt_Assists_Change()
                 txt_Assists.Text = inp
                 If index <> 0 Then
                     txt_Assists.SelStart = (index - 1)
+                End If
+            End If
+        End If
+End Sub
+
+Public Sub txt_Gold_Change()
+' Only allows numerical values and k
+
+        Dim inp As String
+        Dim subStr As String
+        Dim index As Integer
+        inp = txt_Gold.Text
+        index = txt_Gold.SelStart
+
+        If index <> 0 Then
+            subStr = Mid(txt_Gold.Text, index, 1)
+            If InStr(1, allowedCharsK, subStr, vbTextCompare) = 0 Then
+                inp = Replace(inp, subStr, "")
+                txt_Gold.Text = inp
+                If index <> 0 Then
+                    txt_Gold.SelStart = (index - 1)
                 End If
             End If
         End If
@@ -933,5 +982,9 @@ Public Sub txt_LP_Base_Change()
 End Sub
 
 Private Sub UserForm_Initialize()
-    txt_Screenshot.SetFocus
+    If txt_Screenshot.Enabled = True Then
+        txt_Screenshot.SetFocus
+    Else
+        txt_Length_M.SetFocus
+    End If
 End Sub
