@@ -1,14 +1,14 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserForm1 
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Form 
    Caption         =   "Enter Match Information"
    ClientHeight    =   9405.001
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   9750.001
-   OleObjectBlob   =   "UserForm1.frx":0000
+   OleObjectBlob   =   "Form.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
-Attribute VB_Name = "UserForm1"
+Attribute VB_Name = "Form"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -602,7 +602,7 @@ Public Sub btn_Submit_Click()
             txt_Gold.Value = CDbl(strGold) * 1000
             If txt_Gold.Value < 1 Then
                 bErr = True
-            Else
+            End If
         End If
         
         For Each cntrl In Me.Controls
