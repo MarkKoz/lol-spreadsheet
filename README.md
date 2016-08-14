@@ -19,7 +19,7 @@ Features
 * C# port
 * Improve conditionally formatted columns
     * Different ranges per role <sup id="r1">[1](#fn1)</sup>
-    * Differents ranges per champion <sup id="r2">[1](#fn2)</sup>
+    * Differents ranges per champion <sup id="r2">[2](#fn2)</sup>
 * Add error handling!!!
 * Importing match data stored on a file
 
@@ -63,7 +63,7 @@ Credits
 ---
 
 ###### Footnotes
-<a name="fn1">1</a> Because, for example, certain stats like gold and CS per minute have much lower averages for supports and junglers. [↩](#r1)
-<a name="fn2">2</a> Mutch more abitious, but it's something I think is possible and want to try. [↩](#r2)
-<a name="fn3">3</a> This is to prevent crashes because I'm too lazy to check if everything is numerical, so I just force only numerical inputs. [↩](#r3)
+<a id="fn1">1</a> Because, for example, certain stats like gold and CS per minute have much lower averages for supports and junglers. [↩](#r1)
+<a id="fn2">2</a> Mutch more abitious, but it's something I think is possible and want to try. [↩](#r2)
+<a id="fn3">3</a> This is to prevent crashes because I'm too lazy to check if everything is numerical, so I just force only numerical inputs. [↩](#r3)
 
