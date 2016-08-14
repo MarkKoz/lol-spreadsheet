@@ -59,6 +59,7 @@ Credits
 * Mark Kozlov
 * [Stack Overflow](http://stackoverflow.com)
     * [Matteo](http://stackoverflow.com/a/32119820/5717792) - http://stackoverflow.com/a/32119820/5717792
+
 ---
 
 ###### Footnotes
