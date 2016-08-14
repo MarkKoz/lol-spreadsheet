@@ -16,9 +16,10 @@ Features
 * Conditionally formatted columns
 
 #### Planned Features
+* C# port
 * Improve conditionally formatted columns
-    * Different ranges per role [^1]
-    * Differents ranges per champion [^2]
+    * Different ranges per role <sup id="r1">[1](#fn1)</sup>
+    * Differents ranges per champion <sup id="r2">[1](#fn2)</sup>
 * Add error handling!!!
 * Importing match data stored on a file
 
@@ -43,7 +44,7 @@ To log a match, click on the button named __Enter New Match__. A UserForm will a
 Once you have completed the form, you can transfer the data to the spreadsheet by pressing the __Submit__ button. If a mandatory field was entered incorrectly or left empty, the macro will mark that field in red for you (this can be partially disabled.)
 
 ### Configuration
-The macro has several quite specific settings for specifying which fields to clear and which fields to skip over when navigating with the tab key. These settings are located in the *Misc. Settings* tab along with those for disabling error checking. The error checking settings cannot disable error checking for fields which must be numerical.[^3]
+The macro has several quite specific settings for specifying which fields to clear and which fields to skip over when navigating with the tab key. These settings are located in the *Misc. Settings* tab along with those for disabling error checking. The error checking settings cannot disable error checking for fields which must be numerical.<sup id="r3">[3](#fn3)</sup>
 
 
 Known Issues
@@ -56,9 +57,12 @@ Known Issues
 Credits
 ------
 * Mark Kozlov
+* [Stack Overflow](http://stackoverflow.com)
+    * [Matteo](http://stackoverflow.com/a/32119820/5717792) - http://stackoverflow.com/a/32119820/5717792
+---
 
-[^1]: Because, for example, certain stats like gold and CS per minute have much lower averages for supports and junglers.
-[^2]: Mutch more abitious, but it's something I think is possible and want to try.
-[^3]: For example, 13.2k instead of 13200
-[^4]: This is to prevent crashes because I'm too lazy to check if everything is numerical, so I just force only numerical inputs.
+###### Footnotes
+<a name="fn1">1</a> Because, for example, certain stats like gold and CS per minute have much lower averages for supports and junglers. [↩](#r1)
+<a name="fn2">2</a> Mutch more abitious, but it's something I think is possible and want to try. [↩](#r2)
+<a name="fn3">3</a> This is to prevent crashes because I'm too lazy to check if everything is numerical, so I just force only numerical inputs. [↩](#r3)
 
