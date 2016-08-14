@@ -1,3 +1,7 @@
+1.02
+-----
+- Fixed crash relating to gold field
+
 1.01
 -----
 - Fixed crash when prompted to enter LP for first entry
