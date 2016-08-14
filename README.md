@@ -63,7 +63,7 @@ Credits
 ---
 
 ###### Footnotes
-<a id="fn1">1</a> Because, for example, certain stats like gold and CS per minute have much lower averages for supports and junglers. [↩](#r1)
-<a id="fn2">2</a> Mutch more abitious, but it's something I think is possible and want to try. [↩](#r2)
-<a id="fn3">3</a> This is to prevent crashes because I'm too lazy to check if everything is numerical, so I just force only numerical inputs. [↩](#r3)
+1. <a id="fn1"></a> Because, for example, certain stats like gold and CS per minute have much lower averages for supports and junglers. [↩](#r1)
+2. <a id="fn2"></a> Mutch more abitious, but it's something I think is possible and want to try. [↩](#r2)
+3. <a id="fn3"></a> This is to prevent crashes because I'm too lazy to check if everything is numerical, so I just force only numerical inputs. [↩](#r3)
 
