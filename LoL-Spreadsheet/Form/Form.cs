@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace LoL_Spreadsheet.Form
+﻿namespace LoL_Spreadsheet.Form
 {
 	public partial class Form : System.Windows.Forms.Form
 	{
-		private FormControls c;
+		private readonly FormControls _c;
 
 		public Form()
 		{
 			InitializeComponent();
+			_c = new FormControls(this);
 		}
 
 		private void Form_Load(object sender, System.EventArgs e)
 		{
-			c = new FormControls(this);
-			c.Add();
-			c.Properties();
+			
+			_c.Add();
+			_c.Properties();
 		}
 	}
 }
