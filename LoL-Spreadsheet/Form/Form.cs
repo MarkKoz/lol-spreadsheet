@@ -11,8 +11,7 @@
 		}
 
 		private void Form_Load(object sender, System.EventArgs e)
-		{
-			
+		{		
 			_c.Add();
 			_c.Properties();
 		}

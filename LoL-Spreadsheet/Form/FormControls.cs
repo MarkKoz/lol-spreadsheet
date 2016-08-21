@@ -85,7 +85,7 @@ namespace LoL_Spreadsheet.Form
 		private readonly Form _f;
 
 		/// <summary>
-		/// 
+		/// Constructor
 		/// </summary>
 		/// <param name="f">The <see cref="System.Windows.Forms.Form"/> to add controls to.</param>
 		public FormControls(Form f)
@@ -132,7 +132,7 @@ namespace LoL_Spreadsheet.Form
 			GrpRank.Controls.Add(RankCmbRank);
 			GrpRank.Controls.Add(RankLblLP);
 			GrpRank.Controls.Add(RankNumLP);
-			GrpRank.Controls.Add(RankChkDodge);
+			//GrpRank.Controls.Add(RankChkDodge);
 			GrpRank.Controls.Add(RankNumDodge);
 
 			// grpChamp
@@ -154,12 +154,12 @@ namespace LoL_Spreadsheet.Form
 			CommPgOther.Controls.Add(CommTxtOther);
 
 			// grpSett
-			GrpSett.Controls.Add(SettChkDate);
-			GrpSett.Controls.Add(SettDtpDate);
-			GrpSett.Controls.Add(SettChkClearRank);
-			GrpSett.Controls.Add(SettChkSubClear);
-			GrpSett.Controls.Add(SettChkSubClose);
-			GrpSett.Controls.Add(SettChkSave);
+			//GrpSett.Controls.Add(SettChkDate);
+			//GrpSett.Controls.Add(SettDtpDate);
+			//GrpSett.Controls.Add(SettChkClearRank);
+			//GrpSett.Controls.Add(SettChkSubClear);
+			//GrpSett.Controls.Add(SettChkSubClose);
+			//GrpSett.Controls.Add(SettChkSave);
 
 			// Buttons
 			_f.Controls.Add(BtnSubmit);
@@ -168,15 +168,15 @@ namespace LoL_Spreadsheet.Form
 		}
 
 		/// <summary>
-		/// Retrieves all child controls of a control.
+		/// Retrieves all child controls of a parentControl.
 		/// </summary>
-		/// <param name="control">The control from which to retrieve all child controls.</param>
+		/// <param name="parentControl">The parentControl from which to retrieve all child controls.</param>
 		/// <param name="type">(Optional) The type of the controls to retrieve.</param>
-		/// <returns></returns>
+		/// <returns>All chi</returns>
 		/// <remarks>Code modified from stackoverflow.com/a/3426721/5717792</remarks>
-		public IEnumerable<Control> GetAllControls(Control control, Type type = null)
+		public IEnumerable<Control> GetAllControls(Control parentControl, Type type = null)
 		{
-			var controls = control.Controls.Cast<Control>();
+			var controls = parentControl.Controls.Cast<Control>();
 
 			if (type != null)
 			{
@@ -188,33 +188,65 @@ namespace LoL_Spreadsheet.Form
 			return controls.SelectMany(ctrl => GetAllControls(ctrl)).Concat(controls);
 		}
 
-		public void SetPropertyBulk(string p, object val, Type t = null,
-			Control parent = null)
+		public void SetPropertyBulk(string propertyS, object val, Type t = null,
+			Control parentControl = null)
 		{
-			Control par = parent ?? _f;
-			foreach (Control c in GetAllControls(par, t))
-			{
-				PropertyInfo prop = c.GetType()
-					.GetProperty(p, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+			Control parent = parentControl ?? _f;
 
-				if (prop != null && prop.CanWrite)
+			foreach (Control c in GetAllControls(parent, t))
+			{
+				PropertyInfo p;
+
+				try
+				{
+					p = c.GetType().GetProperty(propertyS,
+						BindingFlags.Public
+						| BindingFlags.Instance
+						| BindingFlags.FlattenHierarchy);
+				}
+				catch (AmbiguousMatchException)
+				{
+					p = c.GetType().GetProperty(propertyS,
+						BindingFlags.Public
+						| BindingFlags.Instance
+						| BindingFlags.DeclaredOnly);
+					Debug.Print($"Ambiguous match for property {propertyS} " +
+					            $"in control {c}");
+				}		
+
+				if (p != null && p.CanWrite)
 				{
 					try
 					{
-						prop.SetValue(c, val, null);
+						p.SetValue(c, val, null);
+						Debug.Print($"================\n" +
+						            $"Set property\n" +
+						            $"Type: {c}\n" +
+						            $"Property: {p.Name}\n" +
+						            $"Value: {val}\n" +
+						            $"Check: {p.GetValue(c)}");
 					}
-					catch (ArgumentException e)
+					catch (ArgumentException)
 					{
 						Debug.Print(
-							$"The given value {val} is not valid for the given property {p} in control {c}.");
-						//throw new ArgumentException(
-						//	$"The given value {val} is not valid for the given property {p}.", e);
+							$"The given value {val} is not valid for the " +
+							$"given property {propertyS} in control {c}.");
 					}
 				}
 				else
 				{
-					Debug.Print($"The given property {p} does not exist for control {c}.");
+					Debug.Print($"The given property {propertyS} does not " +
+					            $"exist for control {c}.");
 				}
+			}
+		}
+
+		public void SetPropertyBulk(string propertyS, object val, ICollection<Type> t,
+			Control parentControl = null)
+		{
+			foreach (Type type in t)
+			{
+				SetPropertyBulk(propertyS, val, type);
 			}
 		}
 
@@ -223,40 +255,55 @@ namespace LoL_Spreadsheet.Form
 		/// </summary>
 		public void Properties()
 		{
-			//temp
+			// Temporarily hide containers
 			//grpStats.Hide();
 			GrpChamp.Hide();
 			GrpRank.Hide();
 			GrpSett.Hide();
 			TabComm.Hide();
 
-			const int padE = 16;
-			const int padB = 16;
+			// Constants
+			const int padE = 16; /* Padding for outer controls (i.e. containers) 
+								 between the controls and the client window bounds.*/
+			const int padB = 16; /* Padding for outer controls (i.e. containers) 
+								 between controls themselves.*/
 
-			const int padEIn = 8;
-			const int padBIn = 8;
+			const int padEIn = 8;/* Padding for contained controls between the
+								 controls and the container bounds.*/
+			const int padBIn = 8;/* Padding for contained controls between
+								 between controls themselves.*/
 
-			const int cHeight = 16;
+			const int cHeight = 16;// Some controls will be set to this height.
 
-			SetPropertyBulk("TextAlign", ContentAlignment.MiddleLeft, typeof(Label));
+			// Bulk set
+			SetPropertyBulk("TextAlign", ContentAlignment.MiddleLeft,
+				new List<Type> {typeof(Label), typeof(CheckBox)});
 			SetPropertyBulk("Left", padEIn, typeof(Label));
 			SetPropertyBulk("Margin", Padding.Empty);
 			SetPropertyBulk("Padding", Padding.Empty);
 			SetPropertyBulk("Padding", Point.Empty, typeof(TabControl));
-
-			// Height
-			SetPropertyBulk("MinimumSize", new Size(0, cHeight), typeof(Label));
-			SetPropertyBulk("AutoSize", true, typeof(Label));
-			SetPropertyBulk("Height", cHeight, typeof(TextBox));
-			SetPropertyBulk("Height", cHeight, typeof(NumericUpDown));
+			SetPropertyBulk("Height", cHeight,
+				new List<Type>
+				{
+					typeof(Label),
+					typeof(CheckBox),
+					typeof(TextBox),
+					typeof(NumericUpDown)
+				});
+			SetPropertyBulk("MinimumSize", new Size(0, cHeight),
+				new List<Type> {typeof(Label), typeof(CheckBox)});
+			SetPropertyBulk("MaximumSize", new Size(0, cHeight),
+				new List<Type> { typeof(Label), typeof(CheckBox) });
+			SetPropertyBulk("AutoSize", true,
+				new List<Type> {typeof(Label), typeof(CheckBox)});
+			SetPropertyBulk("AutoSize", false,
+				new List<Type> {typeof(TextBox), typeof(NumericUpDown)});
+			//SetPropertyBulk("Font", new Font("Microsoft Sans Serif", 8, GraphicsUnit.Pixel),
+			//	new List<Type> {typeof(TextBox), typeof(NumericUpDown)});
 
 			// Form
 			int bSize = SystemInformation.FrameBorderSize.Width * 2;
 			int cSize = SystemInformation.CaptionHeight + bSize;
-
-			Debug.Print($"Border width: {bSize}");
-			Debug.Print($"Caption Height: {cSize}");
-			Debug.Print($"Caption Height (No Border): {cSize - bSize}");
 
 			_f.Text = "Enter New Match";
 			_f.ClientSize = new Size(512, 512);
@@ -265,15 +312,13 @@ namespace LoL_Spreadsheet.Form
 			// TODO Remember user's window position stackoverflow.com/a/108217/5717792
 			_f.StartPosition = FormStartPosition.WindowsDefaultLocation;
 
-			int fW = _f.ClientSize.Width;
-			int fH = _f.ClientSize.Height;
-
+			int fW = _f.ClientSize.Width, fH = _f.ClientSize.Height;
 			int cX = fW / 2;
 
 			// GrpGen
 			GrpGen.Text = "General";
 			GrpGen.Width = 256;
-			GrpGen.Location = new Point(bSize + padE, -6 + padE);
+			GrpGen.Location = new Point(padE, -6 + padE);
 
 			GenChkScreen.Text = "Screenshot";
 			GenChkScreen.Location = new Point(padEIn, 7 + padEIn);
@@ -305,7 +350,7 @@ namespace LoL_Spreadsheet.Form
 
 			GrpStats.Text = "Statistics";
 			GrpStats.Width = 256;
-			GrpStats.Location = new Point(bSize + padE, GrpGen.Bottom - 6 + padB);
+			GrpStats.Location = new Point(padE, GrpGen.Bottom - 6 + padB);
 
 			StatsLblK.Text = "Kills:";
 			StatsLblK.Top = 7 + padEIn;
@@ -358,22 +403,40 @@ namespace LoL_Spreadsheet.Form
 			const int bPadY = 16;
 
 			BtnClear.Text = "Clear";
-			BtnClear.Size = new Size(72, 24);
+			BtnClear.Size = new Size(72, 26);
 			BtnClear.Location = new Point(cX - BtnClear.Width/2,
-				fH - BtnClear.Height - bPadY);
+				fH - BtnClear.Height - bPadY + 1);
 
 			BtnSubmit.Text = "Submit";
-			BtnSubmit.Size = new Size(72, 24);
+			BtnSubmit.Size = new Size(72, 26);
 			BtnSubmit.Location = new Point(BtnClear.Location.X/2 -
 				BtnSubmit.Width/2,
-				fH - BtnSubmit.Height - bPadY);
+				fH - BtnSubmit.Height - bPadY + 1);
 
 			BtnCancel.Text = "Cancel";
-			BtnCancel.Size = new Size(72, 24);
-			BtnCancel.Location = new Point(BtnClear.Location.X + BtnClear.Width +
-				((fW - (BtnClear.Location.X + BtnClear.Width))/2 -
-				BtnCancel.Width/2),
-				fH - BtnCancel.Height - bPadY);
+			BtnCancel.Size = new Size(72, 26);
+			BtnCancel.Location = new Point(BtnClear.Right +
+				((fW - (BtnClear.Right))/2 - BtnCancel.Width/2),
+				fH - BtnCancel.Height - bPadY + 1);
+
+			Debug.Print($"Check Top: {GenChkScreen.Top}");
+			Debug.Print($"Check Bottom: {GenChkScreen.Bottom}");
+			Debug.Print($"Check Height: {GenChkScreen.Height}");
+
+			Debug.Print($"Check TextBox Top: {GenTxtScreen.Top}");
+			Debug.Print($"Check TextBox Bottom: {GenTxtScreen.Bottom}");
+			Debug.Print($"Check TextBox Height: {GenTxtScreen.Height}");
+
+			Debug.Print($"Length Label Top: {GenLblLength.Top}");
+			Debug.Print($"Length Label Bottom: {GenLblLength.Bottom}");
+			Debug.Print($"Length Label Height: {GenLblLength.Height}");
+
+			Debug.Print($"Length M TextBox Top: {GenNumLengthM.Top}");
+			Debug.Print($"Length M TextBox Bottom: {GenNumLengthM.Bottom}");
+			Debug.Print($"Length M TextBox Height: {StatsTxtGold.Height}");
+			Debug.Print($"Length M TextBox Font Size: {StatsTxtGold.Font.Height}");
+			Debug.Print($"Length M TextBox Font Size Unit: {StatsTxtGold.Font.Unit}");
+			Debug.Print($"Length M TextBox Font Name: {StatsTxtGold.Font}");
 		}
 	}
 }
