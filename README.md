@@ -19,7 +19,7 @@ Features
 * C# port
 * Improve conditionally formatted columns
     * Different ranges per role <sup id="r1">[1](#fn1)</sup>
-    * Differents ranges per champion <sup id="r2">[1](#fn2)</sup>
+    * Differents ranges per champion <sup id="r2">[2](#fn2)</sup>
 * Add error handling!!!
 * Importing match data stored on a file
 
@@ -57,14 +57,16 @@ Known Issues
 Credits
 ------
 * Mark Kozlov
+* Nima Shoghi
+* Max - testing
 * [Stack Overflow](http://stackoverflow.com)
     * [PsychoCoder](http://stackoverflow.com/users/88230/psychocoder) - http://stackoverflow.com/a/3426721/5717792
     * [Matteo](http://stackoverflow.com/a/32119820/5717792) - http://stackoverflow.com/a/32119820/5717792
-    * [statue](http://stackoverflow.com/users/833921/statue) - http://stackoverflow.com/a/20661481/5717792
+
 ---
 
 ###### Footnotes
-<a name="fn1">1</a> Because, for example, certain stats like gold and CS per minute have much lower averages for supports and junglers. [↩](#r1)
-<a name="fn2">2</a> Mutch more abitious, but it's something I think is possible and want to try. [↩](#r2)
-<a name="fn3">3</a> This is to prevent crashes because I'm too lazy to check if everything is numerical, so I just force only numerical inputs. [↩](#r3)
+1. <a id="fn1"></a> Because, for example, certain stats like gold and CS per minute have much lower averages for supports and junglers. [↩](#r1)
+2. <a id="fn2"></a> Mutch more abitious, but it's something I think is possible and want to try. [↩](#r2)
+3. <a id="fn3"></a> This is to prevent crashes because I'm too lazy to check if everything is numerical, so I just force only numerical inputs. [↩](#r3)
 

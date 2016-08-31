@@ -132,7 +132,7 @@ namespace LoL_Spreadsheet.Form
 			GrpRank.Controls.Add(RankCmbRank);
 			GrpRank.Controls.Add(RankLblLP);
 			GrpRank.Controls.Add(RankNumLP);
-			//GrpRank.Controls.Add(RankChkDodge);
+			GrpRank.Controls.Add(RankChkDodge);
 			GrpRank.Controls.Add(RankNumDodge);
 
 			// grpChamp
@@ -154,12 +154,12 @@ namespace LoL_Spreadsheet.Form
 			CommPgOther.Controls.Add(CommTxtOther);
 
 			// grpSett
-			//GrpSett.Controls.Add(SettChkDate);
-			//GrpSett.Controls.Add(SettDtpDate);
-			//GrpSett.Controls.Add(SettChkClearRank);
-			//GrpSett.Controls.Add(SettChkSubClear);
-			//GrpSett.Controls.Add(SettChkSubClose);
-			//GrpSett.Controls.Add(SettChkSave);
+			GrpSett.Controls.Add(SettChkDate);
+			GrpSett.Controls.Add(SettDtpDate);
+			GrpSett.Controls.Add(SettChkClearRank);
+			GrpSett.Controls.Add(SettChkSubClear);
+			GrpSett.Controls.Add(SettChkSubClose);
+			GrpSett.Controls.Add(SettChkSave);
 
 			// Buttons
 			_f.Controls.Add(BtnSubmit);
@@ -219,12 +219,6 @@ namespace LoL_Spreadsheet.Form
 					try
 					{
 						p.SetValue(c, val, null);
-						Debug.Print($"================\n" +
-						            $"Set property\n" +
-						            $"Type: {c}\n" +
-						            $"Property: {p.Name}\n" +
-						            $"Value: {val}\n" +
-						            $"Check: {p.GetValue(c)}");
 					}
 					catch (ArgumentException)
 					{
@@ -241,8 +235,8 @@ namespace LoL_Spreadsheet.Form
 			}
 		}
 
-		public void SetPropertyBulk(string propertyS, object val, ICollection<Type> t,
-			Control parentControl = null)
+		public void SetPropertyBulk(string propertyS, object val, 
+			ICollection<Type> t, Control parentControl = null)
 		{
 			foreach (Type type in t)
 			{
@@ -258,7 +252,7 @@ namespace LoL_Spreadsheet.Form
 			// Temporarily hide containers
 			//grpStats.Hide();
 			GrpChamp.Hide();
-			GrpRank.Hide();
+			//GrpRank.Hide();
 			GrpSett.Hide();
 			TabComm.Hide();
 
@@ -268,36 +262,50 @@ namespace LoL_Spreadsheet.Form
 			const int padB = 16; /* Padding for outer controls (i.e. containers) 
 								 between controls themselves.*/
 
-			const int padEIn = 8;/* Padding for contained controls between the
-								 controls and the container bounds.*/
-			const int padBIn = 8;/* Padding for contained controls between
-								 between controls themselves.*/
+			const int padEIn = 16; /* Padding for contained controls between the
+								   controls and the container bounds.*/
+			const int padBIn = 8; /* Padding for contained controls between
+								  between controls themselves.*/
 
-			const int cHeight = 16;// Some controls will be set to this height.
+			const int cHeight = 20; // Some controls will be set to this height.
+			const int cWidth = 80; // Some controls will be set to this width.
 
 			// Bulk set
-			SetPropertyBulk("TextAlign", ContentAlignment.MiddleLeft,
-				new List<Type> {typeof(Label), typeof(CheckBox)});
+
+			// Position
 			SetPropertyBulk("Left", padEIn, typeof(Label));
 			SetPropertyBulk("Margin", Padding.Empty);
 			SetPropertyBulk("Padding", Padding.Empty);
 			SetPropertyBulk("Padding", Point.Empty, typeof(TabControl));
+			SetPropertyBulk("TextAlign", ContentAlignment.MiddleLeft,
+				new List<Type> { typeof(Label), typeof(CheckBox) });
+
+			// Size
+			SetPropertyBulk("Width", cWidth,
+				new List<Type>
+				{
+					typeof(TextBox),
+					typeof(NumericUpDown),
+					typeof(ComboBox)
+				});
 			SetPropertyBulk("Height", cHeight,
 				new List<Type>
 				{
 					typeof(Label),
 					typeof(CheckBox),
 					typeof(TextBox),
-					typeof(NumericUpDown)
+					typeof(NumericUpDown),
+					typeof(ComboBox)
 				});
 			SetPropertyBulk("MinimumSize", new Size(0, cHeight),
-				new List<Type> {typeof(Label), typeof(CheckBox)});
+				new List<Type> { typeof(Label), typeof(CheckBox) });
 			SetPropertyBulk("MaximumSize", new Size(0, cHeight),
 				new List<Type> { typeof(Label), typeof(CheckBox) });
 			SetPropertyBulk("AutoSize", true,
-				new List<Type> {typeof(Label), typeof(CheckBox)});
+				new List<Type> { typeof(Label), typeof(CheckBox) });
 			SetPropertyBulk("AutoSize", false,
-				new List<Type> {typeof(TextBox), typeof(NumericUpDown)});
+				new List<Type> { typeof(TextBox), typeof(NumericUpDown) });
+
 			//SetPropertyBulk("Font", new Font("Microsoft Sans Serif", 8, GraphicsUnit.Pixel),
 			//	new List<Type> {typeof(TextBox), typeof(NumericUpDown)});
 
@@ -317,72 +325,95 @@ namespace LoL_Spreadsheet.Form
 
 			// GrpGen
 			GrpGen.Text = "General";
-			GrpGen.Width = 256;
 			GrpGen.Location = new Point(padE, -6 + padE);
 
 			GenChkScreen.Text = "Screenshot";
 			GenChkScreen.Location = new Point(padEIn, 7 + padEIn);
 			GenChkScreen.CheckState = CheckState.Checked;
 
-			GenTxtScreen.Width = 64;
-			GenTxtScreen.Location = new Point(128, 7 + padEIn);
+			GenTxtScreen.Location = new Point(96, 7 + padEIn);
 
-			GenLblLength.Text = "Match Length:";
+			GenLblLength.Text = "Length:";
 			GenLblLength.Top = GenChkScreen.Bottom + padBIn;
 
-			GenLblLengthM.Text = "M:";
-			GenLblLengthM.Location = new Point(96, GenTxtScreen.Bottom + padBIn);
+			GenNumLengthS.Width = 32;
+			GenNumLengthS.Location =
+				new Point(GenTxtScreen.Right - GenNumLengthS.Width,
+					GenTxtScreen.Bottom + padBIn);
 
 			GenLblLengthS.Text = "S:";
-			GenLblLengthS.Location = new Point(160, GenTxtScreen.Bottom + padBIn);
+			GenLblLengthS.Location =
+				new Point(GenNumLengthS.Left - GenLblLengthS.Width,
+					GenTxtScreen.Bottom + padBIn);
 
 			GenNumLengthM.Width = 32;
-			GenNumLengthM.Location = new Point(128, GenTxtScreen.Bottom + padBIn);
+			GenNumLengthM.Location =
+				new Point(GenLblLengthS.Left - GenNumLengthM.Width - 8,
+					GenTxtScreen.Bottom + padBIn);
 
-			GenNumLengthS.Width = 32;
-			GenNumLengthS.Location = new Point(192, GenTxtScreen.Bottom + padBIn);
+			GenLblLengthM.Text = "M:";
+			GenLblLengthM.Location =
+				new Point(GenNumLengthM.Left - GenLblLengthM.Width,
+					GenTxtScreen.Bottom + padBIn);
 
-			GrpGen.Height = GenNumLengthM.Bottom + padEIn;
+			GrpGen.Size = new Size(GenTxtScreen.Right + padEIn,
+				GenNumLengthM.Bottom + padEIn);
 
-			// GrpStats
-			SetPropertyBulk("Width", 64, typeof(TextBox), GrpStats);
-			SetPropertyBulk("Width", 64, typeof(NumericUpDown), GrpStats);
-
+			// GrpStats	
 			GrpStats.Text = "Statistics";
-			GrpStats.Width = 256;
 			GrpStats.Location = new Point(padE, GrpGen.Bottom - 6 + padB);
 
 			StatsLblK.Text = "Kills:";
 			StatsLblK.Top = 7 + padEIn;
 
-			StatsNumK.Location = new Point(128, 7 + padEIn);
+			StatsNumK.Location = new Point(96, 7 + padEIn);
 
 			StatsLblD.Text = "Deaths:";
 			StatsLblD.Top = StatsLblK.Bottom + padBIn;
 
-			StatsNumD.Location = new Point(128, StatsLblK.Bottom + padBIn);
+			StatsNumD.Location = new Point(96, StatsLblK.Bottom + padBIn);
 
 			StatsLblA.Text = "Assists:";
 			StatsLblA.Top = StatsLblD.Bottom + padBIn;
 
-			StatsNumA.Location = new Point(128, StatsLblD.Bottom + padBIn);
+			StatsNumA.Location = new Point(96, StatsLblD.Bottom + padBIn);
 
 			StatsLblCS.Text = "CS:";
 			StatsLblCS.Top = StatsLblA.Bottom + padBIn;
 
-			StatsNumCS.Location = new Point(128, StatsLblA.Bottom + padBIn);
+			StatsNumCS.Location = new Point(96, StatsLblA.Bottom + padBIn);
 
 			StatsLblGold.Text = "Gold:";
 			StatsLblGold.Top = StatsLblCS.Bottom + padBIn;
 
-			StatsTxtGold.Location = new Point(128, StatsLblCS.Bottom + padBIn);
+			StatsTxtGold.Location = new Point(96, StatsLblCS.Bottom + padBIn);
 
-			GrpStats.Height = StatsLblGold.Bottom + padEIn;
+			GrpStats.Size = new Size(StatsTxtGold.Right + padEIn, 
+				StatsLblGold.Bottom + padEIn);
 
 			// GrpRank
 			GrpRank.Text = "Rank";
-			GrpRank.Size = new Size(128, 128);
-			GrpRank.Location = new Point(bSize + 16, cSize + 16);
+			GrpRank.Width = 224;
+			GrpRank.Location = new Point(GrpStats.Right + padB, -6 + padE);
+
+			RankLblRank.Text = "Rank";
+			RankLblRank.Top = 7 + padEIn;
+
+			RankCmbRank.Location = new Point(96, 7 + padEIn);
+
+			RankLblLP.Text = "LP Change";
+			RankLblLP.Top = RankLblRank.Bottom + padBIn;
+
+			RankNumLP.Location = new Point(96, RankLblRank.Bottom + padBIn);
+
+			RankChkDodge.Text = "Dodged";
+			RankChkDodge.Location = new Point(padEIn, RankLblLP.Bottom + padBIn);
+
+			RankNumDodge.Text = "Enter current LP";
+			RankNumDodge.Location = new Point(96, RankLblLP.Bottom + padBIn);
+
+			GrpRank.Size = new Size(RankNumLP.Right + padEIn,
+				RankChkDodge.Bottom + padEIn);
 
 			// GrpChamp
 			GrpChamp.Text = "Champion and Lane";
